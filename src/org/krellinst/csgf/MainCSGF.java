@@ -3,8 +3,12 @@ package org.krellinst.csgf;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
+import org.krellinst.csgf.R.color;
+import org.krellinst.csgf.fragments.WelcomeFragment;
 import org.krellinst.csgf.util.CSGFUtil;
+import org.krellinst.csgf.util.UpdateUI;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainCSGF extends FragmentActivity {
 
@@ -23,8 +28,10 @@ public class MainCSGF extends FragmentActivity {
 
 	/* Fragments */
 	private static final int Welcome = 0;
-	private static final int Fragment_Count = Welcome + 1;
+	private static final int Agenda = 1;
+	private static final int Fragment_Count = Agenda + 1;
 	private Fragment[] fragments = new Fragment[Fragment_Count];
+
 	private MenuDrawer sideDrawer;
 
 	@Override
@@ -36,6 +43,7 @@ public class MainCSGF extends FragmentActivity {
 		/* Setup the fragments */
 		FragmentManager fm = getSupportFragmentManager();
 		fragments[Welcome] = fm.findFragmentById(R.id.welcomeFragment);
+		fragments[Agenda] = fm.findFragmentById(R.id.agendaFragment);
 		FragmentTransaction trans = fm.beginTransaction();
 		for (int i = 0; i < fragments.length; i++) {
 			if (fragments[i] != null) {
@@ -46,6 +54,21 @@ public class MainCSGF extends FragmentActivity {
 		tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
 
 		addMenuDrawers();
+		onAppLaunched(false);
+	}
+
+	private void onAppLaunched(boolean backStack) {
+		FragmentManager manager = getSupportFragmentManager();
+		// Get number of entries in the backstack
+		int backStackSize = manager.getBackStackEntryCount();
+		// Clear the back stack
+		for (int i = 0; i < backStackSize; i++) {
+			manager.popBackStack();
+		}
+		// Show the main fragment
+		((WelcomeFragment) fragments[Welcome]).setText("WELCOME CSGF 2013!");
+		System.out.println("AGENDA!!!!!!");
+		showFragment(Agenda, backStack);
 	}
 
 	@Override
@@ -86,8 +109,11 @@ public class MainCSGF extends FragmentActivity {
 	private void addMenuDrawers() {
 		/* Add the sliding menu panel */
 		sideDrawer = MenuDrawer.attach(this, Position.LEFT);
-		sideDrawer.setMenuSize((int) (CSGFUtil.getScreenWidth(this) * .50));
+		sideDrawer.setMenuSize((int) (CSGFUtil.getScreenWidth(this) * .80));
 		sideDrawer.setMenuView(R.layout.menu_scrollview);
 		menuListLayout = (LinearLayout) findViewById(R.id.menuListLayout);
+		TextView header = (TextView) findViewById(R.id.menuTitle);
+		UpdateUI.setTypeFace(tf, header, Color.WHITE);
 	}
+
 }

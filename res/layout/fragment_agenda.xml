@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/AntiqueWhite"
     android:orientation="vertical" >
 
     <Button
@@ -9,5 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Press to view Agenda" />
+
+    <TextView
+        android:id="@+id/agendaText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="YOUR AGENDA!" />
 
 </LinearLayout>
