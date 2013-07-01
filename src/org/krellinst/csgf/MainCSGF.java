@@ -29,14 +29,13 @@ public class MainCSGF extends FragmentActivity {
 	/* Fragments */
 	private static final int Welcome = 0;
 	private static final int Agenda = 1;
-	private static final int Fragment_Count = Agenda + 1;
-	private Fragment[] fragments = new Fragment[Fragment_Count];
 
 	/* Drawer */
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 
 	private String[] mCategories;
+	private int[] mImage;
 	private ListView mDrawerList;
 
 	private CharSequence mDrawerTitle;
@@ -51,6 +50,11 @@ public class MainCSGF extends FragmentActivity {
 
 		mTitle = mDrawerTitle = getTitle();
 		mCategories = getResources().getStringArray(R.array.drawer_list);
+		mImage = new int[] { R.drawable.ic_menu_info_details,
+				android.R.drawable.ic_menu_today,
+				R.drawable.ic_menu_allfriends,
+				android.R.drawable.ic_menu_mapmode, R.drawable.ic_menu_home,
+				android.R.drawable.ic_menu_camera };
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, R.string.drawer_open,
@@ -75,6 +79,7 @@ public class MainCSGF extends FragmentActivity {
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
 		/* Sets the adapter for the list view */
+		
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, mCategories));
 
@@ -100,11 +105,11 @@ public class MainCSGF extends FragmentActivity {
 		Fragment fragment = null;
 		Bundle args = new Bundle();
 
-		if (position == 0) {
+		if (position == Welcome) {
 			fragment = new WelcomeFragment();
 			args.putInt(WelcomeFragment.ARG_POSITION, position);
 
-		} else if (position == 1) {
+		} else if (position == Agenda) {
 			fragment = new AgendaFragment();
 			args.putInt(AgendaFragment.ARG_POSITION, position);
 
