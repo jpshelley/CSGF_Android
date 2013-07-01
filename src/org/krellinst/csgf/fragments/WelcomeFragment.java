@@ -10,14 +10,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class WelcomeFragment extends Fragment {
-	final static String ARG_POSITION = "position";
+	public static final String ARG_POSITION = "position";
 	int mCurrentPosition = -1;
+
+	public WelcomeFragment() {
+
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_welcome, container,
 				false);
+		int i = getArguments().getInt(ARG_POSITION);
+
 		TextView welcomeText = (TextView) view.findViewById(R.id.welcomeText);
 		welcomeText.setText("Welcome to CSGF 2013!");
 		return view;

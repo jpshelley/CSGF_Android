@@ -1,23 +1,23 @@
 package org.krellinst.csgf;
 
-import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.Position;
-
-import org.krellinst.csgf.R.color;
+import org.krellinst.csgf.fragments.AgendaFragment;
 import org.krellinst.csgf.fragments.WelcomeFragment;
-import org.krellinst.csgf.util.CSGFUtil;
-import org.krellinst.csgf.util.UpdateUI;
-
-import android.graphics.Color;
+import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ListView;
 
 public class MainCSGF extends FragmentActivity {
 
@@ -32,43 +32,129 @@ public class MainCSGF extends FragmentActivity {
 	private static final int Fragment_Count = Agenda + 1;
 	private Fragment[] fragments = new Fragment[Fragment_Count];
 
-	private MenuDrawer sideDrawer;
+	/* Drawer */
+	private DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
+
+	private String[] mCategories;
+	private ListView mDrawerList;
+
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
 
 	@Override
+	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main_csgf);
 
-		/* Setup the fragments */
-		FragmentManager fm = getSupportFragmentManager();
-		fragments[Welcome] = fm.findFragmentById(R.id.welcomeFragment);
-		fragments[Agenda] = fm.findFragmentById(R.id.agendaFragment);
-		FragmentTransaction trans = fm.beginTransaction();
-		for (int i = 0; i < fragments.length; i++) {
-			if (fragments[i] != null) {
-				trans.hide(fragments[i]);
+		mTitle = mDrawerTitle = getTitle();
+		mCategories = getResources().getStringArray(R.array.drawer_list);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.drawer_open,
+				R.string.drawer_close) {
+			/* Called when a drawer has settled in a completely closed state */
+			public void onDrawerClosed(View v) {
+				getActionBar().setTitle(mTitle);
+				invalidateOptionsMenu(); // Creates call to
+											// onPrepareOptionsMenu()
 			}
-		}
-		trans.commit();
+
+			/* Called when a drawer has settled in completely open state */
+			public void onDrawerOpened(View drawerView) {
+				getActionBar().setTitle(mDrawerTitle);
+				invalidateOptionsMenu(); // Creates call to onPrepare
+
+			}
+		};
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+		/* Sets the adapter for the list view */
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.drawer_list_item, mCategories));
+
+		/* Set the lists click listener */
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
 		tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
 
-		addMenuDrawers();
-		onAppLaunched(false);
 	}
 
-	private void onAppLaunched(boolean backStack) {
-		FragmentManager manager = getSupportFragmentManager();
-		// Get number of entries in the backstack
-		int backStackSize = manager.getBackStackEntryCount();
-		// Clear the back stack
-		for (int i = 0; i < backStackSize; i++) {
-			manager.popBackStack();
+	/* The click listner for ListView in the navigation drawer */
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
 		}
-		// Show the main fragment
-		((WelcomeFragment) fragments[Welcome]).setText("WELCOME CSGF 2013!");
-		System.out.println("AGENDA!!!!!!");
-		showFragment(Agenda, backStack);
+	}
+
+	private void selectItem(int position) {
+		// update the main content by replacing fragments
+		Fragment fragment = null;
+		Bundle args = new Bundle();
+
+		if (position == 0) {
+			fragment = new WelcomeFragment();
+			args.putInt(WelcomeFragment.ARG_POSITION, position);
+
+		} else if (position == 1) {
+			fragment = new AgendaFragment();
+			args.putInt(AgendaFragment.ARG_POSITION, position);
+
+		} else if (position == 2) {
+			fragment = new Fragment();
+			// args.putInt(Fragment.ARG_PLANET_NUMBER, position);
+
+		} else if (position == 3) {
+			fragment = new Fragment();
+			// args.putInt(Fragment.ARG_PLANET_NUMBER, position);
+
+		} else if (position == 4) {
+			fragment = new Fragment();
+			// args.putInt(Fragment.ARG_PLANET_NUMBER, position);
+
+		} else if (position == 5) {
+			fragment = new Fragment();
+			// args.putInt(Fragment.ARG_PLANET_NUMBER, position);
+
+		} else if (position == 6) {
+			fragment = new Fragment();
+			// args.putInt(Fragment.ARG_PLANET_NUMBER, position);
+
+		}
+		fragment.setArguments(args);
+
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.content_frame, fragment).commit();
+
+		// update selected item and title, then close the drawer
+		mDrawerList.setItemChecked(position, true);
+		setTitle(mCategories[position]);
+		mDrawerLayout.closeDrawer(mDrawerList);
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getActionBar().setTitle(mTitle);
+	}
+
+	/* Called whenever we call invalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content
+		// view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -76,6 +162,31 @@ public class MainCSGF extends FragmentActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_csg, menu);
 		return true;
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		// Handle your other action bar items...
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -92,28 +203,4 @@ public class MainCSGF extends FragmentActivity {
 	public void onSaveInstanceState(Bundle bundle) {
 		super.onSaveInstanceState(bundle);
 	}
-
-	private void showFragment(int fragmentIndex, boolean addToBackStack) {
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction trans = fm.beginTransaction();
-		for (int i = 0; i < fragments.length; i++) {
-			if (i == fragmentIndex) {
-				trans.show(fragments[i]);
-			} else {
-				trans.hide(fragments[i]);
-			}
-		}
-		trans.commit();
-	}
-
-	private void addMenuDrawers() {
-		/* Add the sliding menu panel */
-		sideDrawer = MenuDrawer.attach(this, Position.LEFT);
-		sideDrawer.setMenuSize((int) (CSGFUtil.getScreenWidth(this) * .80));
-		sideDrawer.setMenuView(R.layout.menu_scrollview);
-		menuListLayout = (LinearLayout) findViewById(R.id.menuListLayout);
-		TextView header = (TextView) findViewById(R.id.menuTitle);
-		UpdateUI.setTypeFace(tf, header, Color.WHITE);
-	}
-
 }
