@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/AntiqueWhite"
-    android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/agendaButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Press to view Agenda" />
-
-    <TextView
-        android:id="@+id/agendaText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="YOUR AGENDA!" />
-
-</LinearLayout>
+<WebView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/webview"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" />

@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/AntiqueWhite"
+    android:background="@color/SteelBlue"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_marginLeft="20dip"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:text="Welcome to CSGF!"
-        android:textColor="@color/Black"
-        android:textSize="30dip" />
+        android:textColor="@color/White"
+        android:textSize="30sp" />
 
 </LinearLayout>
