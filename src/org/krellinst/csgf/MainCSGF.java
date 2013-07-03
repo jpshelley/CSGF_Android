@@ -21,7 +21,7 @@ import android.widget.ListView;
 
 public class MainCSGF extends FragmentActivity {
 
-	public Typeface tf;
+	public static Typeface tf;
 
 	/* Layouts */
 	public LinearLayout menuListLayout;
@@ -79,7 +79,7 @@ public class MainCSGF extends FragmentActivity {
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
 		/* Sets the adapter for the list view */
-		
+
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, mCategories));
 
@@ -87,6 +87,8 @@ public class MainCSGF extends FragmentActivity {
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
+
+		selectItem(Welcome);
 
 	}
 
